@@ -33,7 +33,7 @@
 /datum/interaction/tail_weave
 	name = "Сплестись хвостами."
 	description = "Сплестись с чужим хвостом."
-	message = list("сплетается с хвостом TARGET.")
+	message = list("сплетается с хвостом %TARGET%.")
 	color = "pink"
 	category = "Tail"
 	user_required_parts = list(ORGAN_SLOT_TAIL = REQUIRE_GENITAL_ANY)
