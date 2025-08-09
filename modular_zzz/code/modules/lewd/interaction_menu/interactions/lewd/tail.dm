@@ -1,5 +1,16 @@
+// Код для работы проверки хвостов и всего такого
 /obj/item/organ/tail
 	var/always_accessible = TRUE
+
+/datum/component/interactable/get_interaction_attributes(mob/living/carbon/human/target)
+	. = ..()
+	if(istype(target) && target.has_tail(REQUIRE_GENITAL_ANY))
+		. += "have a tail"
+	return .
+
+////////////////////////////////
+// NON-ERP интеракты с хвостом//
+////////////////////////////////
 
 /datum/interaction/tail_hug
 	name = "Обнять хвостом."
@@ -24,25 +35,23 @@
 	description = "Сплестись с чужим хвостом."
 	message = list("сплетается с хвостом TARGET.")
 	color = "pink"
+	category = "Tail"
 	user_required_parts = list(ORGAN_SLOT_TAIL = REQUIRE_GENITAL_ANY)
 	target_required_parts = list(ORGAN_SLOT_TAIL = REQUIRE_GENITAL_ANY)
 	sound_use = TRUE
-	interaction_sound = 'sound/weapons/thudswoosh.ogg'
+	sound_possible = list('sound/items/weapons/thudswoosh.ogg')
 
 /datum/interaction/selfhugtail
 	name = "Обнять свой хвост."
 	description = "Демонстрация собственной независимости через хвост."
-	simple_message = "обнимает свой хвост."
+	category = "Tail"
+	message = list("обнимает свой хвост.")
 	usage = INTERACTION_SELF
 	user_required_parts = list(ORGAN_SLOT_TAIL = REQUIRE_GENITAL_ANY)
-	interaction_sound = 'sound/weapons/thudswoosh.ogg'
+	sound_use = TRUE
+	sound_possible = list('sound/items/weapons/thudswoosh.ogg')
 
-/datum/component/interactable/get_interaction_attributes(mob/living/carbon/human/target)
-	. = ..()
-	if(istype(target) && target.has_tail(REQUIRE_GENITAL_ANY))
-		. += "have a tail"
-	return .
-
+// База для ERP интерактов с хвостами
 /datum/interaction/lewd/tail
 	user_required_parts = list(ORGAN_SLOT_TAIL = REQUIRE_GENITAL_ANY)
 	cum_target = list(CLIMAX_POSITION_TARGET = null)
@@ -99,6 +108,10 @@
 	if(liquid_container)
 		interaction_modifier_flags &= ~INTERACTION_OVERRIDE_FLUID_TRANSFER
 
+///////////////////////
+// Интеракты с кем-то//
+///////////////////////
+
 /datum/interaction/lewd/tail/dick
 	name = "Хвост. Подрочить член."
 	description = "Подрочить чужой член при помощи хвоста."
@@ -152,6 +165,32 @@
 						'modular_zzplurt/sound/interactions/champ2.ogg')
 	cum_message_text_overrides = list(CLIMAX_POSITION_TARGET = list("обдаёт соками хвост %USER%."))
 
+/datum/interaction/lewd/tail/vagina_rub
+	name = "Хвост. Наглаживания по вагине."
+	description = "Скользить хвостом по чужой вагине при помощи хвоста."
+	target_required_parts = list(ORGAN_SLOT_VAGINA = REQUIRE_GENITAL_EXPOSED)
+	cum_genital = list(CLIMAX_POSITION_TARGET = CLIMAX_VAGINA)
+	try_milking = TRUE
+	additional_details = list(INTERACTION_FILLS_CONTAINERS)
+	help_text = list(
+		"нежно скользит хвостиком около лона %TARGET%.",
+		"лаского движется вблизь лона %TARGET%, прислушиваясь к чужой реакции.",
+		"ритмично мягко похлопывает киску %TARGET% своим хвостом, стараясь доставить максимум удовольствия."
+	)
+	grab_text = list(
+		"настойчиво вжимается в вагину %TARGET% хвостом, то и дело поёрзывая из стороны в сторону.",
+		"активно похлопывает вагину %TARGET%, с усилием оттягивая чужие лепестки.",
+		"вдавливает хвост в вагину %TARGET% и начинает двигаться, словно вот-вот собираясь войти внутрь."
+	)
+	harm_text = list(
+		"издевательски грубо хлопает по вагине %TARGET% хвостом, стараясь оставить боль от хлопков на каждой части.",
+		"резко хлопает хвостом по вагине %TARGET% с безжалостной силой, словно стараясь выбить чужие силы.",
+		"активно растягивает лепестки %TARGET% при помощи хвоста, заставляя подумать в желании порвать чужое тело."
+	)
+	sound_possible = list('modular_zzplurt/sound/interactions/champ1.ogg',
+						'modular_zzplurt/sound/interactions/champ2.ogg')
+	cum_message_text_overrides = list(CLIMAX_POSITION_TARGET = list("обдаёт соками хвост %USER%."))
+
 /datum/interaction/lewd/tail/ass
 	name = "Хвост. Проникнуть в задницу."
 	description = "Проникнуть внутрь чужого зада при помощи хвоста."
@@ -175,6 +214,42 @@
 						'modular_zzplurt/sound/interactions/bang2.ogg',
 						'modular_zzplurt/sound/interactions/bang3.ogg')
 	cum_message_text_overrides = list(CLIMAX_POSITION_TARGET = list("крепко сжимает хвост %USER%."))
+
+/datum/interaction/lewd/tail/ass_rub
+	name = "Хвост. Проскользить между ягодиц."
+	description = "Уместить свой хвост между чужих ягодиц."
+	target_required_parts = list(ORGAN_SLOT_ANUS = REQUIRE_GENITAL_EXPOSED)
+	help_text = list(
+		"скользит меж булок %TARGET% своим хвостом.",
+		"нежно двигает хвостом около ануса %TARGET%, массируя тот.",
+		"оттягивает колечко %TARGET% при помощи хвоста, стараясь доставить приятные ощущения."
+	)
+	grab_text = list(
+		"активно елозит хвостом около ануса %TARGET%, то и дело стараясь утыкаться в чувствительные части.",
+		"вдавливает хвост в анальное отверстие %TARGET%, стараясь раскрыть то оттягиваниями хвоста в сторону.",
+		"ритмично поёрзывает между булок %TARGET%, извиваясь и надавливая внутрь."
+	)
+	harm_text = list(
+		"мучает зад %TARGET% хвостом, словно стараясь вбиться внутрь.",
+		"с силой оттягивает зад %TARGET% при помощи хвоста, причиняя тому болезненные ощущения.",
+		"грубо похлопывает колечко %TARGET%, действуя с напором и без капли жалости."
+	)
+	sound_possible = list('modular_zzplurt/sound/interactions/bang1.ogg',
+						'modular_zzplurt/sound/interactions/bang2.ogg',
+						'modular_zzplurt/sound/interactions/bang3.ogg')
+	cum_message_text_overrides = list(CLIMAX_POSITION_TARGET = list("крепко сжимает хвост %USER%."))
+
+/datum/interaction/lewd/slap/tail
+	name = "Хвост. Шлёпнуть по заду"
+	description = "Шлёпнуть чужой зад при помощи хвоста."
+	interaction_requires = list()
+	user_required_parts = list(ORGAN_SLOT_TAIL = REQUIRE_GENITAL_ANY)
+	category = "Tail"
+	message = list(
+		"шлёпает зад %TARGET% при помощи хвоста!",
+		"отшлёпывает зад %TARGET% своим хвостом!",
+		"даёт %TARGET% хороший шлепок по заду своим хвостом!",
+	)
 
 /datum/interaction/lewd/tail/urethra
 	name = "Хвост. Проникнуть в уретру."
@@ -204,6 +279,61 @@
 	)
 	cum_message_text_overrides = list(CLIMAX_POSITION_TARGET = list("крепко сжимает хвост %USER%, обдавая тот семенем."))
 
+/datum/interaction/lewd/tail/breast
+	name = "Хвост. Сжать грудь."
+	description = "Сжать чужую грудь при помощи хвоста."
+	target_required_parts = list(ORGAN_SLOT_BREASTS = REQUIRE_GENITAL_EXPOSED)
+	try_milking = TRUE
+	additional_details = list(INTERACTION_FILLS_CONTAINERS)
+	help_text = list(
+		"нежно обвивает грудь %TARGET% при помощи хвоста.",
+		"мягко сжимает грудь %TARGET% своим хвостом, прислушиваясь к чужой реакции.",
+		"ритмично обжимает грудь %TARGET% своим хвостом, стараясь доставить максимум удовольствия."
+	)
+	grab_text = list(
+		"настойчиво вжимается в сосок %TARGET% хвостом, то и дело поёрзывая из стороны в сторону.",
+		"активно натирает соски %TARGET% своим хвостом, с усилием те вжимая в грудь.",
+		"обхватывает часть груди %TARGET% своим хвостом, стараясь схватить то в кольцо."
+	)
+	harm_text = list(
+		"издевательски избивает соски %TARGET% хвостом, стараясь оставить боль от хлопков на каждой части.",
+		"грубо сжимает хвостик вокруг груди %TARGET% с безжалостной силой, словно стараясь выжать.",
+		"активно заигрывает с сосками %TARGET% при помощи хвоста, то и дело их грубо похлопывая."
+	)
+	sound_possible = list('modular_zzplurt/sound/interactions/squelch1.ogg')
+
+/datum/interaction/lewd/tail/breast/post_interaction(mob/living/user, mob/living/target)
+	. = ..()
+	if(!(interaction_modifier_flags & INTERACTION_OVERRIDE_FLUID_TRANSFER))
+		return
+	var/obj/item/liquid_container
+
+	var/obj/item/cached_item = user.get_active_held_item()
+	if(istype(cached_item) && cached_item.is_refillable() && cached_item.is_drainable())
+		liquid_container = cached_item
+	else
+		cached_item = user.pulling
+		if(istype(cached_item) && cached_item.is_refillable() && cached_item.is_drainable())
+			liquid_container = cached_item
+
+	if(!liquid_container)
+		return
+	var/obj/item/organ/genital/breasts/breasts = target.get_organ_slot(ORGAN_SLOT_BREASTS)
+	if(breasts?.internal_fluid_datum)
+		// Calculate milk amount based on how full the breasts are (0.5 to 2 multiplier)
+		var/milk_multiplier = 0.5
+		if(breasts.internal_fluid_maximum > 0)
+			milk_multiplier = 0.5 + (1.5 * (breasts.internal_fluid_count / breasts.internal_fluid_maximum))
+
+		var/transfer_amount = rand(1, 3 * milk_multiplier)
+		var/datum/reagents/R = new(breasts.internal_fluid_maximum)
+		breasts.transfer_internal_fluid(R, transfer_amount)
+		R.trans_to(liquid_container, R.total_volume)
+		qdel(R)
+
+////////////////////////////
+// Интеракты с самим собой//
+////////////////////////////
 
 /datum/interaction/lewd/tail/dick/self
 	name = "Хвост. Подрочить свой член."
@@ -215,7 +345,7 @@
 						'modular_zzplurt/sound/interactions/bang2.ogg',
 						'modular_zzplurt/sound/interactions/bang3.ogg')
 	help_text = list(
-		"безуспешно удовлетворяет себя, гуляя по своему члену хвостиком.",
+		"удовлетворяет себя, гуляя по своему члену хвостиком.",
 		"нежно скользит хвостом вверх-вниз по своему члену, подстраиваясь под каждое движение.",
 		"ритмично ласкает свой член хвостом, стараясь доставить себе удовольствие."
 	)
@@ -258,6 +388,32 @@
 						'modular_zzplurt/sound/interactions/champ2.ogg')
 	cum_message_text_overrides = list(CLIMAX_POSITION_USER = list("обдаёт соками собственный хвост."))
 
+/datum/interaction/lewd/tail/vagina_rub/self
+	name = "Хвост. Наглаживания по своей вагине."
+	description = "Скользить хвостом по чужой вагине при помощи хвоста."
+	usage = INTERACTION_SELF
+	target_required_parts = list()
+	cum_genital = list(CLIMAX_POSITION_USER = CLIMAX_VAGINA)
+	user_required_parts = list(ORGAN_SLOT_TAIL = REQUIRE_GENITAL_ANY, ORGAN_SLOT_VAGINA = REQUIRE_GENITAL_EXPOSED)
+	help_text = list(
+		"нежно скользит хвостиком около своего лона.",
+		"лаского движется вблизь собственного лона, прислушиваясь к своим чувствам.",
+		"ритмично мягко похлопывает свою киску хвостом, стараясь доставить себе максимум удовольствия."
+	)
+	grab_text = list(
+		"настойчиво вжимается свою вагину хвостом, то и дело поёрзывая из стороны в сторону.",
+		"активно похлопывает свою вагину, с усилием оттягивая собственные лепестки.",
+		"вдавливает хвост в свою вагину и начинает двигаться, словно вот-вот собираясь войти внутрь."
+	)
+	harm_text = list(
+		"издевательски грубо хлопает своей вагине хвостом, стараясь оставить боль от хлопков на каждой части.",
+		"резко хлопает хвостом собственной вагине с безжалостной силой, словно стараясь собственные силы.",
+		"активно растягивает свои лепестки при помощи хвоста, заставляя подумать в желании собственное тело."
+	)
+	sound_possible = list('modular_zzplurt/sound/interactions/champ1.ogg',
+						'modular_zzplurt/sound/interactions/champ2.ogg')
+	cum_message_text_overrides = list(CLIMAX_POSITION_USER = list("обдаёт соками свой хвост."))
+
 /datum/interaction/lewd/tail/ass/self
 	name = "Хвост. Проникнуть в свою задницу."
 	usage = INTERACTION_SELF
@@ -282,6 +438,32 @@
 						'modular_zzplurt/sound/interactions/bang2.ogg',
 						'modular_zzplurt/sound/interactions/bang3.ogg')
 	cum_message_text_overrides = list(CLIMAX_POSITION_USER = list("крепко сжимает собственный хвост внутри своего зада."))
+
+/datum/interaction/lewd/tail/ass_rub/self
+	name = "Хвост. Проскользить между своих ягодиц."
+	description = "Уместить свой хвост между собственных ягодиц."
+	usage = INTERACTION_SELF
+	target_required_parts = list()
+	user_required_parts = list(ORGAN_SLOT_TAIL = REQUIRE_GENITAL_ANY, ORGAN_SLOT_ANUS = REQUIRE_GENITAL_EXPOSED)
+	help_text = list(
+		"скользит меж своих булок хвостом.",
+		"нежно двигает хвостом около собственного ануса, массируя тот.",
+		"оттягивает своё колечко при помощи хвоста, стараясь доставить приятные ощущения."
+	)
+	grab_text = list(
+		"активно елозит хвостом около своего ануса, то и дело стараясь утыкаться в чувствительные части.",
+		"вдавливает хвост в своё анальное отверстие, стараясь раскрыть то оттягиваниями хвоста в сторону.",
+		"ритмично поёрзывает между своих булок, извиваясь и надавливая внутрь."
+	)
+	harm_text = list(
+		"мучает свой зад хвостом, словно стараясь вбиться внутрь.",
+		"с силой оттягивает свой зад при помощи хвоста, причиняя тому болезненные ощущения.",
+		"грубо похлопывает своё колечко, действуя с напором и без капли жалости к себе."
+	)
+	sound_possible = list('modular_zzplurt/sound/interactions/bang1.ogg',
+						'modular_zzplurt/sound/interactions/bang2.ogg',
+						'modular_zzplurt/sound/interactions/bang3.ogg')
+	cum_message_text_overrides = list(CLIMAX_POSITION_TARGET = list("крепко сжимает хвост %USER%."))
 
 /datum/interaction/lewd/tail/urethra/self
 	name = "Хвост. Проникнуть в свою уретру."
@@ -310,3 +492,94 @@
 		"жестко использует свою уретру для проникновения хвоста, причиняя себе резкое, пронизывающее ощущение."
 	)
 	cum_message_text_overrides = list(CLIMAX_POSITION_USER = list("крепко сжимает собственный хвост уретрой, обдавая тот семенем."))
+
+/datum/interaction/lewd/tail/breast/self
+	name = "Хвост. Сжать свою грудь."
+	description = "Сжать свою грудь при помощи хвоста."
+	usage = INTERACTION_SELF
+	target_required_parts = list()
+	user_required_parts = list(ORGAN_SLOT_TAIL = REQUIRE_GENITAL_ANY, ORGAN_SLOT_BREASTS = REQUIRE_GENITAL_EXPOSED)
+	help_text = list(
+		"нежно обвивает свою грудь при помощи хвоста.",
+		"мягко сжимает собственную грудь хвостом, прислушиваясь к своим ощущениям.",
+		"ритмично обжимает свою грудь хвостом, стараясь доставить максимум удовольствия."
+	)
+	grab_text = list(
+		"настойчиво вжимается собственный сосок хвостом, то и дело поёрзывая из стороны в сторону.",
+		"активно натирает свои соски хвостом, с усилием те вжимая в грудь.",
+		"обхватывает часть своей груди хвостом, стараясь схватить то в кольцо."
+	)
+	harm_text = list(
+		"издевательски избивает свои соски хвостом, стараясь оставить боль от хлопков на каждой части.",
+		"грубо сжимает хвостик вокруг собственной груди с безжалостной силой, словно стараясь выжать.",
+		"активно заигрывает со своими сосками при помощи хвоста, то и дело их грубо похлопывая."
+	)
+	sound_possible = list('modular_zzplurt/sound/interactions/squelch1.ogg')
+
+/datum/interaction/lewd/tail/self_oral
+	name = "Рот. Полизать свой хвост."
+	description = "Полизать чужой хвост."
+	interaction_requires = list(INTERACTION_REQUIRE_SELF_MOUTH)
+	target_required_parts = list()
+	user_required_parts = list(ORGAN_SLOT_TAIL = REQUIRE_GENITAL_ANY)
+	help_text = list("нализывает кончик своего хвоста.")
+	grab_text = list("обжимает губами кончик своего хвоста.")
+	harm_text = list("прикусывает кончик своего хвоста.")
+	sound_possible = list('modular_zzplurt/sound/interactions/squelch1.ogg')
+
+////////////////////////////////
+// Интеракты с чьим-то хвостом//
+////////////////////////////////
+
+/datum/interaction/lewd/tail/someone
+	user_required_parts = list()
+	target_required_parts = list(ORGAN_SLOT_TAIL = REQUIRE_GENITAL_ANY)
+
+/datum/interaction/lewd/tail/someone/oral
+	name = "Рот. Полизать хвост."
+	description = "Полизать чужой хвост."
+	interaction_requires = list(INTERACTION_REQUIRE_SELF_MOUTH)
+	help_text = list("нализывает кончик хвоста %TARGET%.")
+	grab_text = list("обжимает губами кончик хвоста %TARGET%.")
+	harm_text = list("прикусывает кончик хвоста %TARGET%.")
+	sound_possible = list('modular_zzplurt/sound/interactions/squelch1.ogg')
+
+// Ура душить хвостом
+/datum/interaction/lewd/extreme/harmful/tail_choke
+	name = "Опасно. Придушить хвостом."
+	description = "Попытаться придушить кого-то при помощи хвоста."
+	user_required_parts = list(ORGAN_SLOT_TAIL = REQUIRE_GENITAL_ANY)
+	category = "Tail"
+	sound_possible = list('sound/items/weapons/thudswoosh.ogg')
+	target_arousal = 6
+	target_pleasure = 0
+	target_pain = 6
+
+/datum/interaction/lewd/extreme/harmful/tail_choke/act(mob/living/user, mob/living/target)
+	message = null
+	var/oxy_damage = 3
+	target_pleasure = 0
+	target_arousal = 6
+	if(target.getOxyLoss() > 40) //задушить и руками можно, это чисто ЕРП эмоут
+		oxy_damage = 0
+	switch(resolve_intent_name(user.combat_mode))
+		if("harm")
+			oxy_damage = rand(3, 6)
+			message = list(
+				"грубо обхватывает своим хвостом шею %TARGET%, стараясь перекрыть доступ к воздуху.",
+				"обвивает шею %TARGET% хвостом, и тут же начинает сжимать, перекрывая дыхательные пути.",
+				"резко стягивает хвост вокруг шеи %TARGET%, вызывая удушье."
+			)
+		else
+			message = list(
+				"захватывает глотку %TARGET% своим хвостом, стараясь перекрывать доступ к воздуху.",
+				"хвостом удерживает шею %TARGET%, всё сильнее сдавливая её.",
+				"вцепляется хвостом в шею %TARGET%, удерживая и не давая сделать вдох."
+			)
+
+	if(!HAS_TRAIT(target, TRAIT_NOBREATH) && oxy_damage)
+		target.apply_damage(oxy_damage, OXY)
+	if(HAS_TRAIT(target, TRAIT_CHOKE_SLUT))
+		target_arousal = 12
+		target_pleasure = 4
+	..()
