@@ -456,10 +456,9 @@
 	usage = INTERACTION_SELF
 	target_required_parts = list()
 	user_required_parts = list(ORGAN_SLOT_TAIL = REQUIRE_GENITAL_ANY, ORGAN_SLOT_BREASTS = REQUIRE_GENITAL_EXPOSED)
-	name = "Хвост. Проскользить между грудей."
 	description = "Проскользить между чужих грудей при помощи хвоста."
 	help_text = list("нежно скользит между собственных грудей при помощи хвоста.")
-	grab_text = list("настойчиво вжимается хвостом и поёрзывает им между собственной груди.")
+	grab_text = list("настойчиво вжимается хвостом и поёрзывает им между собственных грудей.")
 	harm_text = list("издевательски активно ёрзает между своей груди хвостом, то и дело те чуть-ли не шлёпая ту.")
 
 /datum/interaction/lewd/tail/self_oral
