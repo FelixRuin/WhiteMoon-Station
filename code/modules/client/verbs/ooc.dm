@@ -426,10 +426,9 @@ ADMIN_VERB(reset_ooc_color, R_FUN, "Reset Player OOC Color", "Returns player OOC
 /client/proc/attempt_auto_fit_viewport()
 	if (!prefs?.read_preference(/datum/preference/toggle/auto_fit_viewport))
 		return
+	// No need to attempt to fit the viewport on non-initialized clients as they'll auto-fit viewport right before finishing init
 	if(fully_created)
 		INVOKE_ASYNC(src, VERB_REF(fit_viewport))
-	else //Delayed to avoid wingets from Login calls.
-		addtimer(CALLBACK(src, VERB_REF(fit_viewport), 1 SECONDS))
 
 /client/verb/policy()
 	set name = "Show Policy"
@@ -496,7 +495,7 @@ ADMIN_VERB(reset_ooc_color, R_FUN, "Reset Player OOC Color", "Returns player OOC
 
 	var/token = generate_account_link_token()
 
-	var/datum/db_query/query_set_token = SSdbcore.NewQuery("INSERT INTO phpbb.tg_byond_oauth_tokens (`token`, `key`) VALUES (:token, :key)", list("token" = token, "key" = key))
+	var/datum/db_query/query_set_token = SSdbcore.NewQuery("INSERT INTO [format_table_name("tg_byond_oauth_tokens")] tg_byond_oauth_tokens (`token`, `key`) VALUES (:token, :key)", list("token" = token, "key" = key))
 	if(!query_set_token.Execute())
 		to_chat(src, span_danger("Failed to insert account link token into database, please try again later."))
 		qdel(query_set_token)

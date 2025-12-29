@@ -10,16 +10,29 @@
 	message = "taunts!"
 	cooldown = 1.6 SECONDS //note when changing this- this is used by the matrix taunt to block projectiles.
 
-/datum/emote/living/taunt/run_emote(mob/living/user, params, type_override, intentional)
+/datum/emote/living/taunt/run_emote(mob/living/user, params, type_override, intentional, message_override = null)
 	. = ..()
 	user.spin(TAUNT_EMOTE_DURATION, 0.1 SECONDS)
+
+/datum/emote/living/tongue
+	key = "tongue"
+	key_third_person = "tongues"
+	message = "sticks their tongue out."
+
+/datum/emote/living/tongue/run_emote(mob/user, params, type_override, intentional, message_override = null)
+	var/mob/living/carbon/human/human_user = user
+	if(istype(human_user) && !human_user.get_organ_slot(ORGAN_SLOT_TONGUE))
+		to_chat(human_user, span_warning("You don't have a tongue!"))
+		return
+	. = ..()
+	QDEL_IN(human_user.give_emote_overlay(/datum/bodypart_overlay/simple/emote/tongue), 5.2 SECONDS)
 
 /datum/emote/living/blush
 	key = "blush"
 	key_third_person = "blushes"
 	message = "blushes."
 
-/datum/emote/living/blush/run_emote(mob/user, params, type_override, intentional)
+/datum/emote/living/blush/run_emote(mob/user, params, type_override, intentional, message_override = null)
 	. = ..()
 	if(!ishuman(user))
 		return
@@ -71,7 +84,7 @@
 	message = "collapses!"
 	emote_type = EMOTE_VISIBLE | EMOTE_AUDIBLE
 
-/datum/emote/living/collapse/run_emote(mob/user, params, type_override, intentional)
+/datum/emote/living/collapse/run_emote(mob/user, params, type_override, intentional, message_override = null)
 	. = ..()
 	if(isliving(user))
 		var/mob/living/living = user
@@ -97,7 +110,7 @@
 	cooldown = (15 SECONDS)
 	stat_allowed = HARD_CRIT
 
-/datum/emote/living/deathgasp/run_emote(mob/living/user, params, type_override, intentional)
+/datum/emote/living/deathgasp/run_emote(mob/living/user, params, type_override, intentional, message_override = null)
 	if(!is_type_in_typecache(user, mob_type_allowed_typecache))
 		return
 	var/custom_message = user.death_message
@@ -105,7 +118,7 @@
 		message_animal_or_basic = custom_message
 	. = ..()
 	message_animal_or_basic = initial(message_animal_or_basic)
-	if(!user.can_speak() || user.getOxyLoss() >= 50)
+	if(!user.can_speak() || user.get_oxy_loss() >= 50)
 		return //stop the sound if oxyloss too high/cant speak
 	var/mob/living/carbon/carbon_user = user
 	// For masks that give unique death sounds
@@ -125,7 +138,7 @@
 	key_third_person = "faints"
 	message = "faints."
 
-/datum/emote/living/faint/run_emote(mob/user, params, type_override, intentional)
+/datum/emote/living/faint/run_emote(mob/user, params, type_override, intentional, message_override = null)
 	. = ..()
 	if(isliving(user))
 		var/mob/living/living = user
@@ -138,7 +151,7 @@
 	hands_use_check = TRUE
 	var/wing_time = 0.35 SECONDS
 
-/datum/emote/living/flap/run_emote(mob/user, params, type_override, intentional)
+/datum/emote/living/flap/run_emote(mob/user, params, type_override, intentional, message_override = null)
 	. = ..()
 	if(!ishuman(user))
 		return
@@ -252,7 +265,7 @@
 	key_third_person = "kisses"
 	cooldown = 3 SECONDS
 
-/datum/emote/living/kiss/run_emote(mob/living/user, params, type_override, intentional)
+/datum/emote/living/kiss/run_emote(mob/living/user, params, type_override, intentional, message_override = null)
 	. = ..()
 	var/kiss_type = /obj/item/hand_item/kisser
 
@@ -320,7 +333,7 @@
 	cooldown = 1 SECONDS
 	// don't put hands use check here, everything is handled in run_emote
 
-/datum/emote/living/point/run_emote(mob/user, params, type_override, intentional)
+/datum/emote/living/point/run_emote(mob/user, params, type_override, intentional, message_override = null)
 	message_param = initial(message_param) // reset
 	if(iscarbon(user))
 		var/mob/living/carbon/our_carbon = user
@@ -351,7 +364,7 @@
 						TIMER_COOLDOWN_START(src, "point_verb_emote_cooldown", 2 SECONDS)
 					else
 						message_param = "[span_userdanger("bumps [user.p_their()] head on the ground")] trying to motion towards %t."
-						our_carbon.adjustOrganLoss(ORGAN_SLOT_BRAIN, 5)
+						our_carbon.adjust_organ_loss(ORGAN_SLOT_BRAIN, 5)
 						playsound(user, 'sound/effects/glass/glassbash.ogg', 50, TRUE, SHORT_RANGE_SOUND_EXTRARANGE)
 						TIMER_COOLDOWN_START(src, "point_verb_emote_cooldown", 2.5 SECONDS)
 	return ..()
@@ -385,6 +398,11 @@
 		return
 	return user.dna.species.get_cough_sound(user)
 
+/datum/emote/living/wheeze
+	key = "wheeze"
+	key_third_person = "wheezes"
+	message = "wheezes!"
+	emote_type = EMOTE_AUDIBLE
 
 /datum/emote/living/pout
 	key = "pout"
@@ -398,10 +416,12 @@
 	message = "screams!"
 	message_mime = "acts out a scream!"
 	emote_type = EMOTE_VISIBLE | EMOTE_AUDIBLE
-	mob_type_blacklist_typecache = list(/mob/living/brain, /mob/living/carbon/human)
+	mob_type_blacklist_typecache = list(/mob/living/brain)
 	sound_wall_ignore = TRUE
+	specific_emote_audio_cooldown = 10 SECONDS
+	vary = TRUE
 
-/datum/emote/living/scream/run_emote(mob/user, params, type_override, intentional = FALSE)
+/datum/emote/living/scream/run_emote(mob/user, params, type_override, intentional = FALSE, message_override = null)
 	if(!intentional && HAS_TRAIT(user, TRAIT_ANALGESIA))
 		return
 	return ..()
@@ -410,6 +430,12 @@
 	. = ..()
 	if(!intentional && isanimal_or_basicmob(user))
 		return "makes a loud and pained whimper."
+
+/datum/emote/living/scream/get_sound(mob/living/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/humie = user
+	return humie.dna.species.get_scream_sound(user)
 
 /datum/emote/living/scowl
 	key = "scowl"
@@ -427,7 +453,7 @@
 	message = "shivers."
 
 #define SHIVER_LOOP_DURATION (1 SECONDS)
-/datum/emote/living/shiver/run_emote(mob/living/user, params, type_override, intentional)
+/datum/emote/living/shiver/run_emote(mob/living/user, params, type_override, intentional, message_override = null)
 	. = ..()
 
 	animate(user, pixel_w = 1, time = 0.1 SECONDS, flags = ANIMATION_RELATIVE|ANIMATION_PARALLEL)
@@ -445,7 +471,7 @@
 	emote_type = EMOTE_VISIBLE | EMOTE_AUDIBLE
 	vary = TRUE
 
-/datum/emote/living/sigh/run_emote(mob/living/user, params, type_override, intentional)
+/datum/emote/living/sigh/run_emote(mob/living/user, params, type_override, intentional, message_override = null)
 	. = ..()
 	if(!ishuman(user))
 		return
@@ -521,7 +547,7 @@
 	message = "puts their hands on their head and falls to the ground, they surrender%s!"
 	emote_type = EMOTE_VISIBLE | EMOTE_AUDIBLE
 
-/datum/emote/living/surrender/run_emote(mob/user, params, type_override, intentional)
+/datum/emote/living/surrender/run_emote(mob/user, params, type_override, intentional, message_override = null)
 	. = ..()
 	if(isliving(user))
 		var/mob/living/living = user
@@ -533,7 +559,7 @@
 	key_third_person = "sways"
 	message = "sways around dizzily."
 
-/datum/emote/living/sway/run_emote(mob/living/user, params, type_override, intentional)
+/datum/emote/living/sway/run_emote(mob/living/user, params, type_override, intentional, message_override = null)
 	. = ..()
 
 	animate(user, pixel_w = 2, time = 0.5 SECONDS, flags = ANIMATION_RELATIVE|ANIMATION_PARALLEL)
@@ -553,7 +579,7 @@
 	message = "trembles!"
 
 #define TREMBLE_LOOP_DURATION (4.4 SECONDS)
-/datum/emote/living/tremble/run_emote(mob/living/user, params, type_override, intentional)
+/datum/emote/living/tremble/run_emote(mob/living/user, params, type_override, intentional, message_override = null)
 	. = ..()
 
 	animate(user, pixel_w = 2, time = 0.2 SECONDS, flags = ANIMATION_RELATIVE|ANIMATION_PARALLEL)
@@ -568,7 +594,7 @@
 	key_third_person = "twitches"
 	message = "twitches violently."
 
-/datum/emote/living/twitch/run_emote(mob/living/user, params, type_override, intentional)
+/datum/emote/living/twitch/run_emote(mob/living/user, params, type_override, intentional, message_override = null)
 	. = ..()
 
 	animate(user, pixel_w = 1, time = 0.1 SECONDS, flags = ANIMATION_RELATIVE|ANIMATION_PARALLEL)
@@ -582,7 +608,7 @@
 	name = "twitch (Slight)"
 	message = "twitches."
 
-/datum/emote/living/twitch_s/run_emote(mob/living/user, params, type_override, intentional)
+/datum/emote/living/twitch_s/run_emote(mob/living/user, params, type_override, intentional, message_override = null)
 	. = ..()
 
 	animate(user, pixel_w = -1, time = 0.1 SECONDS, flags = ANIMATION_RELATIVE|ANIMATION_PARALLEL)
@@ -621,7 +647,7 @@
 	emote_type = EMOTE_VISIBLE | EMOTE_AUDIBLE
 	cooldown = 5 SECONDS
 
-/datum/emote/living/yawn/run_emote(mob/user, params, type_override, intentional)
+/datum/emote/living/yawn/run_emote(mob/user, params, type_override, intentional, message_override = null)
 	. = ..()
 	if(!isliving(user))
 		return
@@ -630,7 +656,7 @@
 		TIMER_COOLDOWN_START(user, COOLDOWN_YAWN_PROPAGATION, cooldown * 3)
 
 	var/mob/living/carbon/carbon_user = user
-	if(istype(carbon_user) && ((carbon_user.wear_mask?.flags_inv & HIDEFACE) || carbon_user.head?.flags_inv & HIDEFACE))
+	if(carbon_user.obscured_slots & HIDEFACE)
 		return // if your face is obscured, skip propagation
 
 	var/propagation_distance = user.client ? 5 : 2 // mindless mobs are less able to spread yawns
@@ -750,7 +776,7 @@
 			tgui_alert(usr,"Unable to use this emote, must be either hearable or visible.")
 			return FALSE
 
-/datum/emote/living/custom/run_emote(mob/user, params, type_override = null, intentional = FALSE)
+/datum/emote/living/custom/run_emote(mob/user, params, type_override = null, intentional = FALSE, message_override = null)
 	var/our_message = params ? params : get_custom_emote_from_user()
 
 	if(!emote_is_valid(user, our_message))
@@ -806,3 +832,15 @@
 
 /datum/emote/living/carbon/whistle/get_sound(mob/living/user)
 	return 'sound/mobs/humanoids/human/whistle/whistle1.ogg'
+
+/datum/emote/living/gulp
+	key = "gulp"
+	key_third_person = "gulps"
+	message = "gulps nervously."
+	message_mime = "gulps silently!"
+	vary = TRUE
+	emote_type = EMOTE_AUDIBLE | EMOTE_VISIBLE
+
+/datum/emote/living/gulp/get_sound(mob/living/user)
+	return pick('sound/mobs/humanoids/human/gulp/gulp1.ogg',
+				'sound/mobs/humanoids/human/gulp/gulp2.ogg')

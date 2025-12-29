@@ -24,3 +24,18 @@
 	name = "Homeboy Plush"
 	item_path = /obj/item/toy/plush/plush_bro
 	ckeywhitelist = null
+
+/datum/loadout_item/toys/toaste_plushy
+	name = "Marketable Toaste Plushie"
+	item_path = /obj/item/toy/plush/toaste_plushy
+	ckeywhitelist = null
+
+/datum/loadout_item/toys/sindri_plush
+	name = "Incuboi Plushie"
+	item_path = /obj/item/toy/plush/incuboi
+	ckeywhitelist = null
+
+/datum/loadout_item/toys/red_mut
+	name = "Marketable Mutt Plushie"
+	item_path = /obj/item/toy/plush/red_mut
+	ckeywhitelist = null

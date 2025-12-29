@@ -90,10 +90,11 @@
  * * params - Parameters added after the emote.
  * * type_override - Override to the current emote_type.
  * * intentional - Bool that says whether the emote was forced (FALSE) or not (TRUE).
- *
+ * * message_override - Override the emote message with the provided string. If `params` is used,
+ * this string can contain `%t`, which will be replaced with `params`.
  */
-/datum/emote/proc/run_emote(mob/user, params, type_override, intentional = FALSE)
-	var/msg = select_message_type(user, message, intentional)
+/datum/emote/proc/run_emote(mob/user, params, type_override, intentional = FALSE, message_override = null)
+	var/msg = message_override ? message_override : select_message_type(user, message, intentional)
 	if(params && message_param)
 		msg = select_param(user, params)
 
@@ -101,7 +102,8 @@
 	if(!msg)
 		return
 
-	user.log_message(msg, LOG_EMOTE)
+	if(user.client)
+		user.log_message(message_override ? "[select_message_type(user, message, intentional)] | [msg]" : msg, LOG_EMOTE)
 
 	var/tmp_sound = get_sound(user)
 	if(tmp_sound && should_play_sound(user, intentional) && TIMER_COOLDOWN_FINISHED(user, "general_emote_audio_cooldown") && TIMER_COOLDOWN_FINISHED(user, type))
@@ -450,18 +452,21 @@
 *
 * Returns TRUE if it was able to run the emote, FALSE otherwise.
 */
-/atom/proc/manual_emote(text)
-	if(!text)
+/atom/proc/manual_emote(text, log_emote = TRUE)
+	if (!text)
 		CRASH("Someone passed nothing to manual_emote(), fix it")
 
-	log_message(text, LOG_EMOTE)
+	if (log_emote)
+		log_message(text, LOG_EMOTE)
 	visible_message(text, visible_message_flags = EMOTE_MESSAGE)
 	return TRUE
 
-/mob/manual_emote(text)
+/mob/manual_emote(text, log_emote = null)
 	if (stat != CONSCIOUS)
 		return FALSE
-	. = ..()
+	if (isnull(log_emote))
+		log_emote = !isnull(client)
+	. = ..(text, log_emote)
 	if (!.)
 		return FALSE
 	if (!client)

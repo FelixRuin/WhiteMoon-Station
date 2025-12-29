@@ -1,7 +1,7 @@
 #define TESHARI_PUNCH_LOW 2 // Lower bound punch damage
 #define TESHARI_PUNCH_HIGH 6
-#define TESHARI_BURN_MODIFIER 1.25 // They take more damage from practically everything
-#define TESHARI_BRUTE_MODIFIER 1.2
+#define TESHARI_BURN_MODIFIER 2 // WHITEMOON EDIT - Оригинальное значение 1.25 // They take more damage from practically everything
+#define TESHARI_BRUTE_MODIFIER 2 // WHITEMOON EDIT - Оригинальное значение 1.2
 
 // teshari!
 /obj/item/bodypart/head/mutant/teshari
@@ -115,7 +115,6 @@
 	base_limb_id = SPECIES_TESHARI
 	brute_modifier = TESHARI_BRUTE_MODIFIER
 	burn_modifier = TESHARI_BURN_MODIFIER
-	speed_modifier = -0.1
 
 /obj/item/bodypart/leg/right/digitigrade/teshari
 	icon_greyscale = BODYPART_ICON_TESHARI
@@ -123,7 +122,6 @@
 	base_limb_id = SPECIES_TESHARI
 	brute_modifier = TESHARI_BRUTE_MODIFIER
 	burn_modifier = TESHARI_BURN_MODIFIER
-	speed_modifier = -0.1
 
 #undef TESHARI_PUNCH_LOW
 #undef TESHARI_PUNCH_HIGH

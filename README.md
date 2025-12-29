@@ -1,3 +1,7 @@
+<p align="center">
+<img width="539" height="200" alt="splurtlogo" src="https://github.com/user-attachments/assets/69856f7c-58db-4927-a03a-717ec2aec6d6" />
+</p>
+
 ## Whitemoon Station (SPLURT-station/Bubberstation Downstream)
 
 [![CI Suite](https://github.com/BlueMoon-Labs/WhiteMoon-Station/actions/workflows/ci_suite.yml/badge.svg)](https://github.com/BlueMoon-Labs/WhiteMoon-Station/actions/workflows/ci_suite.yml)
@@ -20,6 +24,8 @@ This is S.P.L.U.R.T Station's downstream fork of bubberstation, which is in turn
 
 Space Station 13 is a paranoia-laden round-based roleplaying game set against the backdrop of a nonsensical, metal death trap masquerading as a space station, with charming spritework designed to represent the sci-fi setting and its dangerous undertones. Have fun, and survive!
 
+As of our recent split from Skyrat, a lot of codedocs/modularization guides need to be rewritten. Until it is done expect some wait time with larger refactors. You are also free to edit any Skyrat files
+
 ## Contribution Rules and Guidelines
 
 **1. Do Not Be A Dick**
@@ -39,7 +45,7 @@ Space Station 13 is a paranoia-laden round-based roleplaying game set against th
 - All asset files (images and sound) are **CC-BY-SA 3.0** unless otherwise stated
 - The license information, including the MIT license and its exceptions, can be found at the bottom of this readme.
 - What does this mean to our contributors? **The** [GNU AGPL V3](https://www.gnu.org/licenses/agpl-3.0.html) **licensing on this codebase is non-negotiable** and **irrevocable** the moment you open a PR. We are incapable of privatizing this codebase and you are incapable of restricting your code contributions even if you close the PR. Do not open a contribution if you do not feel comfortable with your code being permanent across the entirety of the community. **All contributions are preserved in commit history**
-- What does this mean to our spriters and sound designers? [CC-BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/) **is the only license that this project will accept**
+- What does this mean to our spriters and sound designers? [CC-BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/) or [CY-BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc/3.0/deed.en) (must be declared appropriately) **are the only licenses that this project will accept.**
 - It is prohibited to use the attribution requirement to [suggest that you endorse or support a particular use](https://creativecommons.org/faq/#do-i-need-to-be-aware-of-anything-else-when-providing-attribution) of your assets.
 - You are entitled to credit yourself with comments and you are entitled to waive the attribution requirement choosing not to be identified as the creator if you wish.
 - If you do not like how your assets were modified or used, it is required that the other person [remove the attribution information upon request](https://wiki.creativecommons.org/wiki/License_Versions#Licensors_may_request_removal_of_attribution).
@@ -48,9 +54,9 @@ Space Station 13 is a paranoia-laden round-based roleplaying game set against th
 
 _Credit: [Goonstation contribution guidelines](https://hackmd.io/@goonstation/docs/%2F%40goonstation%2Fcontribute#What-if-I-change-my-mind-about-my-contributions-being-published)_
 
-## Modularization and codedocs note
+To forward any licensing concerns, please open an issue report or pull request. Alternatively, you can join our [Discord](https://discord.gg/AvjrTqnqEx) and contact the project leaders.
 
-As of our recent split from Skyrat, a lot of codedocs/modularization guides need to be rewritten. Until it is done expect some wait time with larger refactors. You are also free to edit any Skyrat files
+## Modularization and codedocs note
 
 ## Important note - TEST YOUR PULL REQUESTS
 
@@ -85,9 +91,9 @@ For overall design documentation see [HackMD](https://hackmd.io/@tgstation).
 
 ## LICENSE
 
-All code after [commit 333c566b88108de218d882840e61928a9b759d8f on 2014/31/12 at 4:38 PM PST](https://github.com/tgstation/tgstation/commit/333c566b88108de218d882840e61928a9b759d8f) is licensed under [GNU AGPL v3](https://www.gnu.org/licenses/agpl-3.0.html).
+All code after [commit 333c566b88108de218d882840e61928a9b759d8f on 2014/12/31 at 4:38 PM PST](https://github.com/tgstation/tgstation/commit/333c566b88108de218d882840e61928a9b759d8f) is licensed under [GNU AGPL v3](https://www.gnu.org/licenses/agpl-3.0.html).
 
-All code before [commit 333c566b88108de218d882840e61928a9b759d8f on 2014/31/12 at 4:38 PM PST](https://github.com/tgstation/tgstation/commit/333c566b88108de218d882840e61928a9b759d8f) is licensed under [GNU GPL v3](https://www.gnu.org/licenses/gpl-3.0.html).
+All code before [commit 333c566b88108de218d882840e61928a9b759d8f on 2014/12/31 at 4:38 PM PST](https://github.com/tgstation/tgstation/commit/333c566b88108de218d882840e61928a9b759d8f) is licensed under [GNU GPL v3](https://www.gnu.org/licenses/gpl-3.0.html).
 (Including tools unless their readme specifies otherwise.)
 
 See LICENSE and GPLv3.txt for more details.

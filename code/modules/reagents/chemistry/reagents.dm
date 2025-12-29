@@ -42,8 +42,6 @@
 	var/metabolizing = FALSE
 	/// Are we from a material? We might wanna know that for special stuff. Like metalgen. Is replaced with a ref of the material on New()
 	var/datum/material/material
-	///A list of causes why this chem should skip being removed, if the length is 0 it will be removed from holder naturally, if this is >0 it will not be removed from the holder.
-	var/list/reagent_removal_skip_list = list()
 	///The set of exposure methods this penetrates skin with.
 	var/penetrates_skin = VAPOR
 	/// See fermi_readme.dm REAGENT_DEAD_PROCESS, REAGENT_INVISIBLE, REAGENT_SNEAKYNAME, REAGENT_SPLITRETAINVOL, REAGENT_CANSYNTH, REAGENT_IMPURE
@@ -170,8 +168,6 @@
 
 ///Metabolizes a portion of the reagent after on_mob_life() is called
 /datum/reagent/proc/metabolize_reagent(mob/living/carbon/affected_mob, seconds_per_tick, times_fired)
-	if(length(reagent_removal_skip_list))
-		return
 	if(isnull(holder))
 		return
 
@@ -189,11 +185,17 @@
 /datum/reagent/proc/on_burn_wound_processing(datum/wound/burn/flesh/burn_wound)
 	return
 
-/*
-Used to run functions before a reagent is transferred. Returning TRUE will block the transfer attempt.
-Primarily used in reagents/reaction_agents
+/**
+ * Intercepts the reagent transfer/copy operation to do some work before it takes place.
+ * Used to perform some reaction work. Return TRUE To cancel the operation
+ *
+ * Arguments
+ *
+ * * datum/reagents/target - the target holder we are being transferred to
+ * * amount - the amount of reagent being transferred
+ * * copy_only - if TRUE we don't remove ourself from the holder because its a reagent copy & not transfer operation
 */
-/datum/reagent/proc/intercept_reagents_transfer(datum/reagents/target, amount)
+/datum/reagent/proc/intercept_reagents_transfer(datum/reagents/target, amount, copy_only)
 	return FALSE
 
 /// Called when this reagent is first added to a mob

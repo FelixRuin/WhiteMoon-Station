@@ -24,7 +24,7 @@
 		return ..()
 	return FALSE
 
-/datum/emote/living/carbon/human/glasses/run_emote(mob/user, params, type_override, intentional)
+/datum/emote/living/carbon/human/glasses/run_emote(mob/user, params, type_override, intentional, message_override = null)
 	. = ..()
 	var/image/emote_animation = image('icons/mob/human/emote_visuals.dmi', user, "glasses")
 	flick_overlay_global(emote_animation, GLOB.clients, 1.6 SECONDS)
@@ -57,37 +57,17 @@
 	message_mime = "mumbles silently!"
 	emote_type = EMOTE_AUDIBLE | EMOTE_VISIBLE
 
-/datum/emote/living/carbon/human/scream
-	key = "scream"
-	key_third_person = "screams"
-	message = "screams!"
-	message_mime = "acts out a scream!"
-	emote_type = EMOTE_AUDIBLE | EMOTE_VISIBLE
-	specific_emote_audio_cooldown = 10 SECONDS
-	vary = TRUE
-
-/datum/emote/living/carbon/human/scream/can_run_emote(mob/user, status_check = TRUE , intentional, params)
-	if(!intentional && HAS_TRAIT(user, TRAIT_ANALGESIA))
-		return FALSE
-	return ..()
-
-/datum/emote/living/carbon/human/scream/get_sound(mob/living/carbon/human/user)
-	if(!istype(user))
-		return
-	return user.dna.species.get_scream_sound(user)
-
-/datum/emote/living/carbon/human/scream/screech //If a human tries to screech it'll just scream.
+/datum/emote/living/carbon/human/screech // basically scream 2.0
 	key = "screech"
 	key_third_person = "screeches"
 	message = "screeches!"
 	message_mime = "screeches silently."
 	emote_type = EMOTE_AUDIBLE | EMOTE_VISIBLE
+	specific_emote_audio_cooldown = 10 SECONDS
 	vary = FALSE
 
-/datum/emote/living/carbon/human/scream/screech/should_play_sound(mob/user, intentional)
-	if(ismonkey(user))
-		return TRUE
-	return ..()
+/datum/emote/living/carbon/human/screech/get_sound(mob/living/carbon/human/user)
+	return user.dna.species.get_scream_sound(user)
 
 /datum/emote/living/carbon/human/pale
 	key = "pale"
@@ -117,7 +97,7 @@
 	key_third_person = "wags"
 	message = "their tail."
 
-/datum/emote/living/carbon/human/wag/run_emote(mob/user, params, type_override, intentional)
+/datum/emote/living/carbon/human/wag/run_emote(mob/user, params, type_override, intentional, message_override = null)
 	. = ..()
 	var/obj/item/organ/tail/oranges_accessory = user.get_organ_slot(ORGAN_SLOT_EXTERNAL_TAIL)
 	//I am so sorry my son
@@ -146,7 +126,7 @@
 	key_third_person = "wings"
 	message = "their wings."
 
-/datum/emote/living/carbon/human/wing/run_emote(mob/user, params, type_override, intentional)
+/datum/emote/living/carbon/human/wing/run_emote(mob/user, params, type_override, intentional, message_override = null)
 	. = ..()
 	var/obj/item/organ/wings/functional/wings = user.get_organ_slot(ORGAN_SLOT_EXTERNAL_WINGS)
 	if(isnull(wings))
@@ -175,6 +155,7 @@
 	key = "blink"
 	key_third_person = "blinks"
 	message = "blinks."
+	sound = 'sound/mobs/humanoids/human/blink/blink.ogg'
 
 /datum/emote/living/carbon/human/blink/can_run_emote(mob/living/carbon/human/user, status_check, intentional, params)
 	if (!ishuman(user) || HAS_TRAIT(user, TRAIT_PREVENT_BLINKING) || HAS_TRAIT(user, TRAIT_NO_EYELIDS))
@@ -184,7 +165,7 @@
 		return FALSE
 	return ..()
 
-/datum/emote/living/carbon/human/blink/run_emote(mob/living/carbon/human/user, params, type_override, intentional)
+/datum/emote/living/carbon/human/blink/run_emote(mob/living/carbon/human/user, params, type_override, intentional, message_override = null)
 	. = ..()
 	var/obj/item/organ/eyes/eyes = user.get_organ_slot(ORGAN_SLOT_EYES)
 	eyes.blink()
@@ -202,7 +183,7 @@
 		return FALSE
 	return ..()
 
-/datum/emote/living/carbon/human/blink_r/run_emote(mob/user, params, type_override, intentional)
+/datum/emote/living/carbon/human/blink_r/run_emote(mob/user, params, type_override, intentional, message_override = null)
 	. = ..()
 	var/obj/item/organ/eyes/eyes = user.get_organ_slot(ORGAN_SLOT_EYES)
 	for (var/i in 1 to 3)
@@ -264,7 +245,7 @@
 		return FALSE
 	return ..()
 
-/datum/emote/living/carbon/human/glow/run_emote(mob/living/carbon/human/user, params, type_override, intentional)
+/datum/emote/living/carbon/human/glow/run_emote(mob/living/carbon/human/user, params, type_override, intentional, message_override = null)
 	. = ..()
 	var/datum/species/ethereal/goober = user.dna.species
 	goober.handle_glow_emote(user, 1.75, 1.2)
@@ -281,7 +262,7 @@
 		return FALSE
 	return ..()
 
-/datum/emote/living/carbon/human/flare/run_emote(mob/living/carbon/human/user, params, type_override, intentional)
+/datum/emote/living/carbon/human/flare/run_emote(mob/living/carbon/human/user, params, type_override, intentional, message_override = null)
 	. = ..()
 	var/datum/species/ethereal/goober = user.dna.species
 	goober.handle_glow_emote(user, 12, 6, flare = TRUE, duration = 2 SECONDS, flare_time = 10 SECONDS)
@@ -298,7 +279,7 @@
 		return FALSE
 	return ..()
 
-/datum/emote/living/carbon/human/flicker/run_emote(mob/living/carbon/human/user, params, type_override, intentional)
+/datum/emote/living/carbon/human/flicker/run_emote(mob/living/carbon/human/user, params, type_override, intentional, message_override = null)
 	. = ..()
 	var/datum/species/ethereal/goober = user.dna.species
 	goober.start_flicker(user)

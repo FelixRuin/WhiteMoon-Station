@@ -56,7 +56,7 @@
 	spawned.add_mob_memory(/datum/memory/key/message_server_key, decrypt_key = GLOB.preset_station_message_server_key)
 
 /datum/job/chief_engineer/get_captaincy_announcement(mob/living/captain)
-	return "Due to staffing shortages, newly promoted Acting Captain [captain.real_name] on deck!"
+	return "На смену прибыл Старший Инженер, нынче выставленный на пост временного Капитана - [captain.real_name]!"
 
 
 /datum/outfit/job/ce
@@ -69,6 +69,8 @@
 	backpack_contents = list(
 		/obj/item/melee/baton/telescopic/silver = 1,
 // 		/obj/item/construction/rcd/ce = 1, // BUBBER EDIT -> MOVED TO LOCKER
+		/obj/item/extinguisher/mini = 1,
+		/obj/item/analyzer = 1,
 	)
 	belt = /obj/item/storage/belt/utility/chief/full
 	ears = /obj/item/radio/headset/heads/ce

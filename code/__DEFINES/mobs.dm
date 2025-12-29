@@ -167,6 +167,10 @@
 #define BODYSHAPE_HIDE_SHOES (1<<12)
 ///The limb causes glasses and hats to be drawn on layers 5 and 4 respectively. Currently used for snouts with the (Top) suffix, which are drawn on layer 6 and would normally cover facewear
 #define BODYSHAPE_ALT_FACEWEAR_LAYER (1<<13)
+// BUBBER EDIT ADDITION: START - Adding the kinetic bodytype
+///The limb is a kinetic prosthetic.
+#define BODYTYPE_KINETIC (1<<14)
+// BUBBER EDIT ADDITION: END
 
 // SKYRAT EDIT END
 
@@ -197,7 +201,6 @@
 #define SPECIES_HUMAN "human"
 #define SPECIES_JELLYPERSON "jelly"
 #define SPECIES_SLIMEPERSON "slime"
-#define SPECIES_SPIRIT "spirit"
 #define SPECIES_LUMINESCENT "luminescent"
 #define SPECIES_STARGAZER "stargazer"
 #define SPECIES_LIZARD "lizard"
@@ -226,7 +229,7 @@
 #define BODYPART_ID_PSYKER "psyker"
 #define BODYPART_ID_MEAT "meat"
 #define BODYPART_ID_PEG "peg"
-
+#define BODYPART_ID_KINETIC "kinetic" // BUBBER EDIT ADDITION: kinetic bodypart id
 
 //See: datum/species/var/digitigrade_customization
 ///The species does not have digitigrade legs in generation.
@@ -256,6 +259,9 @@
 #define HUMAN_MAX_OXYLOSS 3
 #define HUMAN_CRIT_MAX_OXYLOSS (SSMOBS_DT/3)
 
+/// Combined brute and burn damage states on a human's head after which they become disfigured
+#define HUMAN_DISFIGURATION_HEAD_DAMAGE_STATES 3
+
 #define HEAT_DAMAGE_LEVEL_1 1 //Amount of damage applied when your body temperature just passes the 360.15k safety point
 #define HEAT_DAMAGE_LEVEL_2 1.5 //Amount of damage applied when your body temperature passes the 400K point
 #define HEAT_DAMAGE_LEVEL_3 4 //Amount of damage applied when your body temperature passes the 460K point and you are on fire
@@ -275,6 +281,7 @@
 
 //Brain Damage defines
 #define BRAIN_DAMAGE_MILD 20
+#define BRAIN_DAMAGE_ASYNC_BLINKING 60
 #define BRAIN_DAMAGE_SEVERE 100
 #define BRAIN_DAMAGE_DEATH 200
 
@@ -489,7 +496,7 @@
 
 #define SHOES_SLOWDOWN 0 //How much shoes slow you down by default. Negative values speed you up
 #define POCKET_STRIP_DELAY (4 SECONDS) //time taken to search somebody's pockets
-#define DOOR_CRUSH_DAMAGE 15 //the amount of damage that airlocks deal when they crush you
+#define DOOR_CRUSH_DAMAGE 20 //the amount of damage that airlocks deal when they crush you
 
 #define HUNGER_FACTOR 0.05 //factor at which mob nutrition decreases
 #define ETHEREAL_DISCHARGE_RATE (1e-3 * STANDARD_ETHEREAL_CHARGE) // Rate at which ethereal stomach charge decreases
@@ -500,7 +507,7 @@
 #define REM REAGENTS_EFFECT_MULTIPLIER //! Shorthand for the above define for ease of use in equations and the like
 
 // Eye protection
-// THese values are additive to determine your overall flash protection.
+// These values are additive to determine your overall flash protection.
 #define FLASH_PROTECTION_HYPER_SENSITIVE -2
 #define FLASH_PROTECTION_SENSITIVE -1
 #define FLASH_PROTECTION_NONE 0
@@ -508,6 +515,29 @@
 #define FLASH_PROTECTION_WELDER 2
 #define FLASH_PROTECTION_WELDER_SENSITIVE 3
 #define FLASH_PROTECTION_WELDER_HYPER_SENSITIVE 4
+
+/**
+ * Ear protection
+ * These values are additive to determine your overall ear/soundbang protection
+ */
+#define EAR_PROTECTION_NONE 0
+#define EAR_PROTECTION_NORMAL 1
+#define EAR_PROTECTION_HEAVY 2
+#define EAR_PROTECTION_VACUUM 3
+#define EAR_PROTECTION_FULL INFINITY
+
+/**
+ * Soundbang defines
+ * These values are used as argument to determine the strength of the soundbang_act call
+ */
+///Soundbang strength for most things like flashbangs, honkblasts and harm control modules
+#define SOUNDBANG_NORMAL 1
+///Soundbang strength for things like flashbangs in proximity and emagged harm alarm megaphones, cannot be countered by standard ear protection equipment
+#define SOUNDBANG_STRONG 2
+///Soundbang strength for things like changeling shrieks, which can affect robots and aliens as well.
+#define SOUNDBANG_MASSIVE 3
+///Soundbang strength for anything that cannot be stopped unless you're stacked on multiple effects and equipment to counter it (or are simply deaf)
+#define SOUNDBANG_OVERWHELMING 4
 
 // AI Toggles
 #define AI_CAMERA_LUMINOSITY 5
@@ -643,7 +673,7 @@
 #define AI_EMOTION_UNSURE "Unsure"
 #define AI_EMOTION_CONFUSED "Confused"
 #define AI_EMOTION_SAD "Sad"
-#define AI_EMOTION_BSOD "BSOD"
+#define AI_EMOTION_BSOD "BSOD" //It is used only on EMP pulse displays.
 #define AI_EMOTION_BLANK "Blank"
 #define AI_EMOTION_PROBLEMS "Problems?"
 #define AI_EMOTION_AWESOME "Awesome"
@@ -653,6 +683,8 @@
 #define AI_EMOTION_DORFY "Dorfy"
 #define AI_EMOTION_BLUE_GLOW "Blue Glow"
 #define AI_EMOTION_RED_GLOW "Red Glow"
+#define AI_EMOTION_DEAD "Dead" //This one is used when deactivating the AI
+#define AI_EMOTION_DOWNLOAD "Download"
 
 // Defines for AI holograms
 #define AI_HOLOGRAM_CATEGORY_ANIMAL "Animal"
@@ -730,76 +762,78 @@ GLOBAL_LIST_INIT(human_heights_to_offsets, list(
 /// Total number of layers for mob overlays
 /// KEEP THIS UP-TO-DATE OR SHIT WILL BREAK
 /// Also consider updating layers_to_offset
-#define TOTAL_LAYERS 49 // SKYRAT EDIT CHANGE - ORIGINAL: 38
+#define TOTAL_LAYERS 50 // SKYRAT EDIT CHANGE - ORIGINAL: 38
 /// Mutations layer - Tk headglows, cold resistance glow, etc
-#define MUTATIONS_LAYER 49 // SKYRAT EDIT CHANGE - ORIGINAL: 37
+#define MUTATIONS_LAYER 50 // SKYRAT EDIT CHANGE - ORIGINAL: 37
 /// Mutantrace features (tail when looking south) that must appear behind the body parts
-#define BODY_BEHIND_LAYER 48 // SKYRAT EDIT CHANGE - ORIGINAL: 36
+#define BODY_BEHIND_LAYER 49 // SKYRAT EDIT CHANGE - ORIGINAL: 36
 /// Layer for bodyparts that should appear behind every other bodypart - Mostly, legs when facing WEST or EAST
-#define BODYPARTS_LOW_LAYER 47 // SKYRAT EDIT CHANGE - ORIGINAL: 35
+#define BODYPARTS_LOW_LAYER 48 // SKYRAT EDIT CHANGE - ORIGINAL: 35
 /// Layer for most bodyparts, appears above BODYPARTS_LOW_LAYER and below BODYPARTS_HIGH_LAYER
-#define BODYPARTS_LAYER 46 // SKYRAT EDIT CHANGE - ORIGINAL: 34
+#define BODYPARTS_LAYER 47 // SKYRAT EDIT CHANGE - ORIGINAL: 34
 /// Mutantrace features (snout, body markings) that must appear above the body parts
-#define BODY_ADJ_LAYER 45 // SKYRAT EDIT CHANGE - ORIGINAL: 33
+#define BODY_ADJ_LAYER 46 // SKYRAT EDIT CHANGE - ORIGINAL: 33
 /// Underwear, undershirts, socks
-#define BODY_LAYER 44 // SKYRAT EDIT CHANGE - ORIGINAL: 32
+#define BODY_LAYER 45 // SKYRAT EDIT CHANGE - ORIGINAL: 32
 /// Eyes and eyelids
-#define EYES_LAYER 43 // SKYRAT EDIT CHANGE - ORIGINAL: 31
+#define EYES_LAYER 44 // SKYRAT EDIT CHANGE - ORIGINAL: 31
 // SPLURT EDIT undies
-#define UNDERWEAR_LAYER			42
-#define SOCKS_LAYER				41
-#define BRA_LAYER				40
-#define SHIRT_LAYER				39
+#define UNDERWEAR_LAYER			43
+#define SOCKS_LAYER				42
+#define BRA_LAYER				41
+#define SHIRT_LAYER				40
 // SPLURT EDIT END
 /// Mutations that should appear above body, body_adj and bodyparts layer (e.g. laser eyes)
-#define FRONT_MUTATIONS_LAYER 38 // SKYRAT EDIT CHANGE - ORIGINAL: 30
+#define FRONT_MUTATIONS_LAYER 39 // SKYRAT EDIT CHANGE - ORIGINAL: 30
 /// Damage indicators (cuts and burns)
-#define DAMAGE_LAYER 37 // SKYRAT EDIT CHANGE - ORIGINAL: 29
+#define DAMAGE_LAYER 38 // SKYRAT EDIT CHANGE - ORIGINAL: 29
 // SKYRAT EDIT ADDITION START
 /// This layer is used for things that shouldn't be over clothes, but should be over mutations
-#define BODY_FRONT_UNDER_CLOTHES 36
+#define BODY_FRONT_UNDER_CLOTHES 37
 // SKYRAT EDIT ADDITION END
 /// Jumpsuit clothing layer
-#define UNIFORM_LAYER 35 // SKYRAT EDIT CHANGE - ORIGINAL: 28 //SPLURT EDIT undies
+#define UNIFORM_LAYER 36 // SKYRAT EDIT CHANGE - ORIGINAL: 28 //SPLURT EDIT undies
 // SKYRAT EDIT ADDITION BEGIN - cursed layers under clothing
-#define ANUS_LAYER 34
-#define VAGINA_LAYER 33
-#define PENIS_LAYER 32
-#define NIPPLES_LAYER 31
-#define BANDAGE_LAYER 30
+#define ANUS_LAYER 35
+#define VAGINA_LAYER 34
+#define PENIS_LAYER 33
+#define NIPPLES_LAYER 32
+#define BANDAGE_LAYER 31
 //SKYRAT EDIT ADDITION END
 /// ID card layer
-#define ID_LAYER 29
+#define ID_LAYER 30
 /// ID card layer (might be deprecated)
-#define ID_CARD_LAYER 28
+#define ID_CARD_LAYER 29
 /// Layer for bodyparts that should appear above every other bodypart - Currently only used for hands
-#define BODYPARTS_HIGH_LAYER 27
+#define BODYPARTS_HIGH_LAYER 28
 /// Gloves layer
-#define GLOVES_LAYER 26
+#define GLOVES_LAYER 27
 /// Wrists layer
-#define WRISTS_LAYER 25
+#define WRISTS_LAYER 26
 /// Shoes layer
-#define SHOES_LAYER 24
+#define SHOES_LAYER 25
 /// Layer for masks that are worn below ears and eyes (like Balaclavas) (layers below hair, use flagsinv=HIDEHAIR as needed)
-#define LOW_FACEMASK_LAYER 23
+#define LOW_FACEMASK_LAYER 24
 /// SPLURT EDIT - Extra ears layer
-#define EARS_EXTRA_LAYER 22
+#define EARS_EXTRA_LAYER 23
 /// Ears layer (Spessmen have ears? Wow)
-#define EARS_LAYER 21
+#define EARS_LAYER 22
 /// Layer for neck apperal that should appear below the suit slot (like neckties)
-#define LOW_NECK_LAYER 20
+#define LOW_NECK_LAYER 21
 /// Suit layer (armor, coats, etc.)
-#define SUIT_LAYER 19
+#define SUIT_LAYER 20
 /// Glasses layer
-#define GLASSES_LAYER 18
+#define GLASSES_LAYER 19
 /// Belt layer
-#define BELT_LAYER 17 //Possible make this an overlay of something required to wear a belt?
+#define BELT_LAYER 18 //Possible make this an overlay of something required to wear a belt?
 /// Suit storage layer (tucking a gun or baton underneath your armor)
-#define SUIT_STORE_LAYER 16
+#define SUIT_STORE_LAYER 17
 /// Neck layer (for wearing capes and bedsheets)
-#define NECK_LAYER 15
+#define NECK_LAYER 16
 /// Back layer (for backpacks and equipment on your back)
-#define BACK_LAYER 14
+#define BACK_LAYER 15
+/// Special layer for rendering beneath hair, for special facemasks
+#define BENEATH_HAIR_LAYER 14
 /// Hair layer (mess with the fro and you got to go!)
 #define HAIR_LAYER 13 //TODO: make part of head layer?
 /// Facemask layer (gas masks, breath masks, etc.)
@@ -841,6 +875,7 @@ GLOBAL_LIST_INIT(layers_to_offset, list(
 	"[HEAD_LAYER]" = UPPER_BODY,
 	// Hair will get cut off by filter
 	"[HAIR_LAYER]" = UPPER_BODY,
+	"[BENEATH_HAIR_LAYER]" = UPPER_BODY,
 	// Long belts (sabre sheathe) will get cut off by filter
 	"[BELT_LAYER]" = LOWER_BODY,
 	// Everything below looks fine with or without a filter, so we can skip it and just offset
@@ -971,6 +1006,8 @@ GLOBAL_LIST_INIT(layers_to_offset, list(
 #define VOMIT_CATEGORY_DEFAULT (MOB_VOMIT_MESSAGE | MOB_VOMIT_HARM | MOB_VOMIT_STUN)
 /// The vomit you've all come to know and love, but with a little extra "spice" (blood)
 #define VOMIT_CATEGORY_BLOOD (VOMIT_CATEGORY_DEFAULT | MOB_VOMIT_BLOOD)
+/// The bloody vomit, but without the stunning
+#define VOMIT_CATEGORY_BLOOD_STUNLESS (VOMIT_CATEGORY_BLOOD & ~MOB_VOMIT_STUN)
 /// Another vomit variant that causes you to get knocked down instead of just only getting a stun. Standard otherwise.
 #define VOMIT_CATEGORY_KNOCKDOWN (MOB_VOMIT_MESSAGE | MOB_VOMIT_HARM | MOB_VOMIT_KNOCKDOWN)
 
@@ -1070,7 +1107,7 @@ GLOBAL_LIST_INIT(layers_to_offset, list(
 #define MINING_MOB_PROJECTILE_VULNERABILITY list(BRUTE)
 
 /// Helper macro that determines if the mob is at the threshold to start vomitting due to high toxin levels
-#define AT_TOXIN_VOMIT_THRESHOLD(mob) (mob.getToxLoss() > 45 && mob.nutrition > 20)
+#define AT_TOXIN_VOMIT_THRESHOLD(mob) (mob.get_tox_loss() > 45 && mob.nutrition > 20)
 
 /// The duration of the flip emote animation
 #define FLIP_EMOTE_DURATION 0.7 SECONDS

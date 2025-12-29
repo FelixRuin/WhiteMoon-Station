@@ -3,6 +3,7 @@
 	name = "Invisifiber Footwraps"
 	item_path= /obj/item/clothing/shoes/invisiboots
 
+/* Added upstream
 /datum/loadout_item/shoes/workboots/toeless
 	name = "Toeless Work Boots"
 	item_path = /obj/item/clothing/shoes/workboots/toeless
@@ -10,6 +11,7 @@
 /datum/loadout_item/shoes/jackboots/toeless
 	name = "Toeless Jackboots"
 	item_path = /obj/item/clothing/shoes/jackboots/toeless
+*/
 
 /datum/loadout_item/shoes/jackboots/tall
 	name = "Tall Jackboots"
@@ -18,6 +20,11 @@
 /datum/loadout_item/shoes/hightops
 	name = "Hightop Sneakers"
 	item_path = /obj/item/clothing/shoes/hightops
+
+/datum/loadout_item/shoes/combat_civ
+	name = "Faux Combat Boots"
+	item_path = /obj/item/clothing/shoes/jackboots/faux_combat
+
 
 /* They exist nonmodularly and adding them causes issues with the loadout.
 /datum/loadout_item/shoes/highheels

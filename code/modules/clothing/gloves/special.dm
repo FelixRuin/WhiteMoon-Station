@@ -91,7 +91,7 @@
 	min_cold_protection_temperature = GLOVES_MIN_TEMP_PROTECT
 	heat_protection = HANDS
 	max_heat_protection_temperature = GLOVES_MAX_TEMP_PROTECT
-	strip_delay = 60
+	strip_delay = 6 SECONDS
 	armor_type = /datum/armor/captain_gloves
 	resistance_flags = NONE
 	clothing_traits = list(TRAIT_FAST_CUFFING)
@@ -227,7 +227,7 @@
 		stamina_exhaustion *= 1.5
 		experience *= 2
 
-	wearer.adjustStaminaLoss(stamina_exhaustion)
+	wearer.adjust_stamina_loss(stamina_exhaustion)
 	wearer.mind?.adjust_experience(/datum/skill/athletics, experience)
 	wearer.apply_status_effect(/datum/status_effect/exercised)
 

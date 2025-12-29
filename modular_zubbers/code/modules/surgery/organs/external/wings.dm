@@ -63,7 +63,7 @@
 		COOLDOWN_START(src, dash_cooldown, 6 SECONDS)
 		var/mob/living/dash_user = owner
 		if(istype(dash_user))
-			dash_user.adjustStaminaLoss(40) //Given the risk of flying into things and crashing quite violently, you get four of these. Every one slows you down anyway.
+			dash_user.adjust_stamina_loss(40) //Given the risk of flying into things and crashing quite violently, you get four of these. Every one slows you down anyway.
 	else
 		to_chat(owner, span_warning("Something prevents you from dashing forward!"))
 
@@ -72,7 +72,7 @@
 	key_third_person = "mothdash"
 	cooldown = 6 SECONDS
 
-/datum/emote/living/mothic_dash/run_emote(mob/living/user, params, type_override, intentional)
+/datum/emote/living/mothic_dash/run_emote(mob/living/user, params, type_override, intentional, message_override = null)
 	if (ishuman(user) && intentional)
 		var/datum/action/cooldown/spell/moth_and_dash/dash_action = locate() in user.actions
 		if(dash_action)

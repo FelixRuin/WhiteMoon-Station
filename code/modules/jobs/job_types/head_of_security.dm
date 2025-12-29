@@ -24,7 +24,7 @@
 		/datum/job_department/command,
 		)
 
-	mind_traits = list(HEAD_OF_STAFF_MIND_TRAITS)
+	mind_traits = list(HEAD_OF_STAFF_MIND_TRAITS, SECURITY_MIND_TRAITS)
 	liver_traits = list(TRAIT_LAW_ENFORCEMENT_METABOLISM, TRAIT_ROYAL_METABOLISM)
 
 	paycheck = PAYCHECK_COMMAND
@@ -43,7 +43,7 @@
 
 
 /datum/job/head_of_security/get_captaincy_announcement(mob/living/captain)
-	return "Due to staffing shortages, newly promoted Acting Captain [captain.real_name] on deck!"
+	return "На смену прибыл Глава Службы Безопасности, нынче выставленный на пост временного Капитана - [captain.real_name]!"
 
 
 /datum/outfit/job/hos

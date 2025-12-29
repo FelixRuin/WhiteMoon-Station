@@ -21,6 +21,7 @@ GLOBAL_LIST_INIT(possible_food_allergies, list(
 	medical_record_text = "Patient's immune system responds violently to certain food."
 	hardcore_value = 1
 	quirk_flags = QUIRK_HUMAN_ONLY
+	species_blacklist = list(SPECIES_SYNTH, SPECIES_PROTEAN) //Splurt Edit
 	mail_goodies = list(/obj/item/reagent_containers/hypospray/medipen)
 	/// Footype flags that will trigger the allergy
 	var/target_foodtypes = NONE
@@ -39,7 +40,7 @@ GLOBAL_LIST_INIT(possible_food_allergies, list(
 		if(target_foodtypes != NONE) // Got a preference, don't care
 			return
 
-	target_foodtypes = pick(flatten_list(GLOB.possible_food_allergies))
+	target_foodtypes = pick(assoc_to_values(GLOB.possible_food_allergies))
 
 /datum/quirk/item_quirk/food_allergic/add_unique(client/client_source)
 	var/what_are_we_actually_killed_by = english_list(bitfield_to_list(target_foodtypes, FOOD_FLAGS_IC)) // This should never be more than one thing but just in case we can support it

@@ -146,8 +146,11 @@
 	log_admin("[key_name(usr)] has triggered the Nar'Sie roundender.")
 	start_ending_the_round()
 
-/obj/narsie/attack_ghost(mob/user)
-	make_new_construct(/mob/living/basic/construct/harvester, user, cultoverride = TRUE, loc_override = loc)
+/obj/narsie/attack_ghost(mob/dead/observer/user)
+	if(is_banned_from(user.ckey, ROLE_CULTIST))
+		return
+	if(tgui_alert(user, "Do you wish to become an occult harvester?", "Become Harvester?", list("Yes", "No"), timeout = 10 SECONDS) == "Yes")
+		make_new_construct(/mob/living/basic/construct/harvester, user, cultoverride = TRUE, loc_override = loc, ghost_activated = TRUE)
 
 /obj/narsie/process()
 	var/datum/component/singularity/singularity_component = singularity.resolve()
@@ -253,13 +256,13 @@
 ///First crew last second win check and flufftext for [/proc/begin_the_end()]
 /proc/narsie_end_begin_check()
 	if(QDELETED(GLOB.cult_narsie)) // uno
-		priority_announce("Отчёт о состоянии? Мы обнаружили аномалию, но она почти сразу исчезла.","[command_name()]: Комитет O-5", 'sound/announcer/notice/notice1.ogg')
+		priority_announce("Отчёт о состоянии? Мы обнаружили аномалию, но она почти сразу исчезла.","Комитет O-5", 'sound/announcer/notice/notice1.ogg')
 		GLOB.cult_narsie = null
 		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(cult_ending_helper), CULT_FAILURE_NARSIE_KILLED), 2 SECONDS)
 		return
 	priority_announce(
 		text = "В вашем секторе обнаружено акаузальное размерное событие. Событие отмечено как ИСЧЕЗНОВЕНИЕ. Все доступные ресурсы направляются на моделирование решений. СРОК РЕШЕНИЯ: 60 СЕКУНД.",
-		title = "[command_name()]: Комитет O-5",
+		title = "Комитет O-5",
 		sound = 'sound/announcer/alarm/airraid.ogg',
 	)
 	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(narsie_end_second_check)), 50 SECONDS)
@@ -267,11 +270,11 @@
 ///Second crew last second win check and flufftext for [/proc/begin_the_end()]
 /proc/narsie_end_second_check()
 	if(QDELETED(GLOB.cult_narsie)) // dos
-		priority_announce("Моделирование прекращено, датчики сообщают о нормализации аварийного события. Отличная работа, команда.","[command_name()]: Комитет O-5", 'sound/announcer/notice/notice1.ogg')
+		priority_announce("Моделирование прекращено, датчики сообщают о нормализации аварийного события. Отличная работа, команда.","Комитет O-5", 'sound/announcer/notice/notice1.ogg')
 		GLOB.cult_narsie = null
 		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(cult_ending_helper), CULT_FAILURE_NARSIE_KILLED), 2 SECONDS)
 		return
-	priority_announce("Моделирование акаузального размерного события завершено. Развёртывание пакета решения. Ориентировочное время развёртывания: ОДНА МИНУТА. ","[command_name()]: Комитет O-5")
+	priority_announce("Моделирование акаузального размерного события завершено. Развёртывание пакета решения. Ориентировочное время развёртывания: ОДНА МИНУТА. ","Комитет O-5")
 	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(narsie_start_destroy_station)), 5 SECONDS)
 
 ///security level and shuttle lockdowns for [/proc/begin_the_end()]
@@ -284,7 +287,7 @@
 ///Third crew last second win check and flufftext for [/proc/begin_the_end()]
 /proc/narsie_apocalypse()
 	if(QDELETED(GLOB.cult_narsie)) // tres
-		priority_announce("Обнаружена нормализация! Отмените пакет решений!","[command_name()]: Комитет O-5", 'sound/announcer/notice/notice1.ogg')
+		priority_announce("Обнаружена нормализация! Отмените пакет решений!","Комитет O-5", 'sound/announcer/notice/notice1.ogg')
 		SSshuttle.clearHostileEnvironment(GLOB.cult_narsie)
 		GLOB.cult_narsie = null
 		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(narsie_last_second_win)), 2 SECONDS)

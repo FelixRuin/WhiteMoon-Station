@@ -40,7 +40,7 @@
 	// 	days_remaining = remaining_time,
 	// 	timeout = 10 SECONDS,
 	// )
-	// unvetted_notified = TRUE
+	unvetted_notified = TRUE
 	return TRUE
 
 /mob/dead/new_player/Topic(href, href_list)
@@ -107,6 +107,10 @@
 
 	if(href_list["toggle_ready"])
 		play_lobby_button_sound()
+		// Prevent readying up after the round has begun setting up or is already playing
+		if(SSticker.current_state >= GAME_STATE_SETTING_UP)
+			to_chat(src, span_notice("The round is starting. You cannot ready up at this time."))
+			return FALSE
 		if(CONFIG_GET(flag/min_flavor_text))
 			var/datum/preferences/preferences = client.prefs
 			var/uses_silicon_flavortext = (is_silicon_job(preferences?.get_highest_priority_job()) && length_char(client?.prefs?.read_preference(/datum/preference/text/silicon_flavor_text)) < CONFIG_GET(number/silicon_flavor_text_character_requirement))
@@ -166,8 +170,14 @@
  */
 /mob/dead/new_player/proc/update_title_screen()
 	var/dat = get_title_html()
-
-	src << browse(SStitle.current_title_screen, "file=loading_screen.gif;display=0")
+	//SPLURT EDIT START - Splashscreen toggle
+	//src << browse(SStitle.current_title_screen, "file=loading_screen.gif;display=0")
+	var/hide_splashscreen = (client && client.prefs.read_preference(/datum/preference/toggle/hide_splashscreen)) || (!client?.maturity_prompt_whitelist && CONFIG_GET(flag/age_prompt_system))
+	var/splashscreen_to_load = SStitle.current_title_screen
+	if(splashscreen_to_load && splashscreen_to_load != DEFAULT_TITLE_LOADING_SCREEN && hide_splashscreen)
+		splashscreen_to_load = DEFAULT_TITLE_SCREEN_IMAGE
+	src << browse(splashscreen_to_load, "file=loading_screen.gif;display=0")
+	//SPLURT EDIT END
 	src << browse(dat, "window=title_browser")
 
 /datum/asset/simple/lobby

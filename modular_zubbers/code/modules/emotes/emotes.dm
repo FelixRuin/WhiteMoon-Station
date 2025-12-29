@@ -119,6 +119,11 @@
 	sound = 'modular_zubbers/code/modules/emotes/sound/voice/tailthump.ogg' // See https://github.com/shiptest-ss13/Shiptest/pull/2159
 
 /datum/emote/living/tail_thump/can_run_emote(mob/user, status_check, intentional, params)
+	// SPLURT EDIT START - Allow cyborgs to use tail_thump
+	if(iscyborg(user))
+		return ..()
+	// SPLURT EDIT END - Allow cyborgs to use tail_thump
+
 	var/obj/item/organ/tail/tail = user.get_organ_slot(ORGAN_SLOT_EXTERNAL_TAIL)
 	if(isnull(tail))
 		return FALSE
@@ -158,7 +163,7 @@
 	key_third_person = "bonks"
 	hands_use_check = TRUE
 
-/datum/emote/living/carbon/bonk/run_emote(mob/user, params, type_override, intentional)
+/datum/emote/living/carbon/bonk/run_emote(mob/user, params, type_override, intentional, message_override = null)
 	. = ..()
 	if(!length(user.get_empty_held_indexes()))
 		to_chat(user, span_warning("You don't have any free hands to bonk someone with."))
@@ -203,3 +208,52 @@
 	message = "hisses unnervingly."
 	emote_type = EMOTE_AUDIBLE
 	sound = 'modular_zubbers/code/modules/emotes/sound/voice/xenohiss.ogg'
+
+/datum/emote/living/stoatchirp
+	key = "schirp" // short for stoatchirp
+	key_third_person = "schirps"
+	message = "chirp chirp chirps!"
+	emote_type = EMOTE_AUDIBLE
+	sound = 'sound/mobs/non-humanoids/stoat/stoat_sounds.ogg'
+
+/datum/emote/living/shortmoo
+	key = "smoo" // short for shortmoo
+	key_third_person = "smoos"
+	message = "quickly moos!"
+	emote_type = EMOTE_AUDIBLE
+	sound = 'goon/sounds/cow.ogg'
+
+/datum/emote/living/deermah
+	key = "mah"
+	key_third_person = "mahs"
+	message = "bleats like a deer!"
+	emote_type = EMOTE_AUDIBLE
+	sound = 'modular_skyrat/modules/customization/game/objects/items/sound/leaplush.ogg'
+
+/datum/emote/living/neigh
+	key = "neigh"
+	key_third_person = "neighs"
+	message = "neighs."
+	emote_type = EMOTE_AUDIBLE
+
+/datum/emote/living/neigh/get_sound(mob/living/user)
+	return 'sound/mobs/non-humanoids/pony/whinny03.ogg'
+
+/datum/emote/living/neigh2
+	key = "neigh2"
+	key_third_person = "neighs2"
+	message = "lets out a long winded whinny!"
+	emote_type = EMOTE_AUDIBLE
+
+/datum/emote/living/neigh2/get_sound(mob/living/user)
+	return pick('sound/mobs/non-humanoids/pony/whinny01.ogg',
+				'sound/mobs/non-humanoids/pony/whinny02.ogg')
+
+/datum/emote/living/snort
+	key = "snort"
+	key_third_person = "snorts"
+	message = "snorts."
+	emote_type = EMOTE_AUDIBLE
+
+/datum/emote/living/snort/get_sound(mob/living/user)
+	return 'sound/mobs/non-humanoids/pony/snort.ogg'
